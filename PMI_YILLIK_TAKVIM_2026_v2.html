@@ -1,0 +1,1252 @@
+﻿
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>2026 Ekip Yıllık Planı</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 20px;
+        }
+
+        .event::after {
+            content: attr(data-mode);
+            font-size: 8px;
+            margin-left: 3px;
+        }
+
+        /* HEADER */
+        .header {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+
+        h2 {
+            font-size: 26px;
+            margin: 0;
+        }
+
+        /* LEGEND */
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .legend.dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .legend-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .legend.dashboard-horizontal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .legend-group-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 6px 12px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 12px;
+            background: rgba(0,0,0,0.02);
+        }
+
+
+        .legend-item {
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+
+        /* Calendar */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .quarter {
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            background: #f9fafc;
+        }
+
+        .quarter-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+            background: #1f2a44;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+        }
+
+        .quarter-months {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .month {
+            background: white;
+            padding: 8px;
+            box-shadow: none;
+            border: 1px solid #e4e7ec;
+        }
+
+        .month-title {
+            background: #e10600;
+            color: white;
+            text-align: center;
+            padding: 6px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 6px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            text-align: center;
+            font-weight: bold;
+            background: #d6ddcc;
+            padding: 4px 0;
+            font-size: 12px;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            gap: 2px;
+        }
+
+        .day {
+            min-height: 90px;
+            padding: 3px;
+            font-size: 12px;
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #edf0f5;
+            transition: all 0.2s ease;
+        }
+            .day:hover {
+                background: #f5f7fb;
+            }
+            .day.dimmed {
+                opacity: 0.25;
+            }
+
+        .weekend {
+            background: #f7f8fa;
+        }
+
+        .day-number {
+            -position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 11px;
+            opacity: 0.6;
+        }
+
+        /* IPM DAY VURGUSU */
+        .ipm-highlight {
+            border: 2px solid #e10600 !important;
+            background: #fff;
+            box-shadow: none;
+        }
+
+        .ipm-title {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            right: 3px;
+            font-size: 9px;
+            background: #f39c12;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 2px;
+            font-weight: bold;
+        }
+
+        /* EVENTS */
+        .event {
+            border-radius: 6px;
+            font-size: 9.5px;
+            padding: 2px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Dashboard Buton Görünümü */
+        .filter-btn,
+        .reset-btn {
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+            .filter-btn:hover,
+            .reset-btn:hover {
+                background: rgba(0,0,0,0.08);
+            }
+
+            .filter-btn.active {
+                background: #111;
+                color: white;
+                border-radius: 20px;
+                padding: 6px 14px;
+            }
+
+        .event.dimmed {
+            opacity: 0.15;
+            transform: scale(0.95);
+        }
+
+        .event.highlighted {
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+
+        /* POPUP */
+        .popup {
+            display: none;
+            position: absolute;
+            top: 18px;
+            left: 0;
+            background: white;
+            color: black;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 240px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 100;
+            font-size: 14px;
+        }
+
+            .popup strong {
+                display: inline-block;
+                width: 80px;
+            }
+
+        .event:hover .popup {
+            display: block;
+        }
+
+        /* HOLIDAYS */
+        .holiday-official {
+            background: #c0392b;
+            color: white;
+            font-size: 10px;
+            padding: 2px;
+            border-radius: 4px;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .holiday-bayram {
+            background: #f39c12;
+            color: white;
+            font-size: 10px;
+            padding: 2px;
+            border-radius: 4px;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        /* TEAM COLORS */
+        .team-ank {
+            background: #e57373;
+        }
+
+        .team-ist {
+            background: #66bb6a;
+        }
+
+        .team-izmir {
+            background: #9575cd;
+        }
+
+        .team-akademi {
+            background: #ffff00;
+            color: #000;
+        }
+
+        .team-uyelik {
+            background: #49ff42;
+            color: #000;
+        }
+
+        .team-capm {
+            background: #54ebff;
+            color: #000;
+        }
+
+        .team-pmp {
+            background: #0000ff;
+        }
+
+        .team-acp {
+            background: #1f77b4;
+        }
+
+        .empty {
+            background: transparent;
+            border: none;
+        }
+
+        /* ORTAK ETKİNLİK ÇERÇEVESİ */
+        .special-day-wrapper {
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 4px;
+            margin-top: 4px;
+            background: #ffffff;
+        }
+
+        .special-day-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: #e10600;
+            border-bottom: 1px solid #e10600;
+            text-align: center;
+            padding: 4px;
+            margin: 6px 0;
+            background: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background: white;
+            width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+            .modal-content h2 {
+                margin-top: 0;
+                font-size: 22px;
+            }
+
+            .modal-content p {
+                margin: 6px 0;
+                font-size: 14px;
+            }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .full-day-event.zirve {
+            background: linear-gradient(135deg,#7a0000,#e10600);
+            border: 4px solid #4a0000;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(225,6,0,0.8);
+        }
+
+        .full-day-event.awards {
+            background: linear-gradient(135deg,#000,#c9a227);
+            border: 4px solid #000;
+            color: #fff;
+        }
+
+        .full-day-title {
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 18px;
+            letter-spacing: 1px;
+        }
+
+        .stats-panel {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: #222;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+            .stat-box span {
+                font-size: 15px;
+            }
+
+        .stats-note {
+            font-size: 9px;
+            color: #666;
+            margin-top: 6px;
+            font-style: italic;
+            vertical-align: middle;
+        }
+
+        @media (max-width:1400px) {
+            .quarter-months {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h2>PMI Türkiye 2026 Etkinlik Takvimi</h2>
+
+        <div class="legend dashboard-horizontal">
+
+            <div class="legend-group-inline">
+
+                <div class="legend-item filter-btn" data-team="team-ank">
+                    <div class="legend-color team-ank"></div>ANKARA
+                </div>
+
+                <div class="legend-item filter-btn" data-team="team-ist">
+                    <div class="legend-color team-ist"></div>İSTANBUL
+                </div>
+
+                <div class="legend-item filter-btn" data-team="team-izmir">
+                    <div class="legend-color team-izmir"></div>İZMİR
+                </div>
+            </div>
+
+            <div class="legend-group-inline">
+
+                <div class="legend-item filter-btn" data-team="team-akademi">
+                    <div class="legend-color team-akademi"></div>PMI-TR AKADEMİ
+                </div>
+
+                <div class="legend-item filter-btn" data-team="team-capm">
+                    <div class="legend-color team-capm"></div>CAPM EĞİTİM
+                </div>
+
+                <div class="legend-item filter-btn" data-team="team-pmp">
+                    <div class="legend-color team-pmp"></div>PMP KOLAYLAŞTIRMA
+                </div>
+
+                <div class="legend-item filter-btn" data-team="team-acp">
+                    <div class="legend-color team-acp"></div>ACP KOLAYLAŞTIRMA
+                </div>
+            </div>
+
+            <div class="legend-group-inline">
+
+                <div class="legend-item filter-btn" data-team="team-uyelik">
+                    <div class="legend-color team-uyelik"></div>ÜYE GÜNDEMİ TOPLANTISI
+                </div>
+            </div>
+
+            <div class="legend-item reset-btn">
+                🔄 Tümünü Göster
+            </div>
+
+        </div>
+
+        <div id="statsPanel" class="stats-panel"></div>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">X</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const year = 2026;
+        const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        const weekdays = ["PT", "SA", "ÇA", "PE", "CU", "CT", "PZ"];
+
+        function generateEducation(teamName, teamClass, datesArray) {
+            datesArray.forEach(date => {
+
+                const formatted = date.split("-").reverse().join(".");
+
+                if (!events[date]) {
+                    events[date] = [];
+                }
+
+                events[date].push({
+                    team: teamName,
+                    class: teamClass,
+                    title: teamName + " EĞİTİMİ",
+                    date: formatted,
+                    time: "19:00",
+                    responsible: "Eğitim & Sertifikasyon",
+                    location: "Online",
+                    mode: "online",
+                    type: "education"
+                });
+            });
+        }
+
+        function generateFacilitation(teamName, teamClass, datesArray) {
+            datesArray.forEach(date => {
+
+                const formatted = date.split("-").reverse().join(".");
+
+                if (!events[date]) {
+                    events[date] = [];
+                }
+
+                events[date].push({
+                    team: teamName,
+                    class: teamClass,
+                    title: teamName + " KOLAYLAŞTIRMA",
+                    date: formatted,
+                    time: "19:00",
+                    responsible: "Eğitim & Sertifikasyon",
+                    location: "Online",
+                    mode: "online",
+                    type: "education"
+                });
+            });
+        }
+
+
+
+        // ORTAK ETKİNLİK GÜNLERİ
+        const specialDays = {
+            "2026-08-29": {
+                title: "PMO Awards",
+                type: "full",
+                theme: "awards"
+            },
+            "2026-10-03": {
+                title: "PY ZİRVE",
+                type: "full",
+                theme: "zirve"
+            },
+            "2026-10-10": {
+                title: "PY ZİRVE",
+                type: "full",
+                theme: "zirve"
+            },
+            "2026-10-17": {
+                title: "PY ZİRVE",
+                type: "full",
+                theme: "zirve"
+            },
+            "2026-10-24": {
+                title: "PY ZİRVE",
+                type: "full",
+                theme: "zirve"
+            },
+            "2026-11-05": {
+                title: "IPM DAY",
+                type: "ipm"
+            },
+            "2026-11-14": {
+                title: "ÜYELİK GÜNÜ",
+                type: "common"
+            },
+            "2026-11-21": {
+                title: "ÜYELİK GÜNÜ",
+                type: "common"
+            },
+            "2026-11-28": {
+                title: "ÜYELİK GÜNÜ",
+                type: "common"
+            },
+            "2026-02-13": {
+                title: "KURUMSAL",
+                type: "common"
+            },
+            "2026-03-03": {
+                title: "WIP(PMO)",
+                type: "common"
+            },
+            "2026-03-28": {
+                title: "AKADEMİ",
+                type: "common"
+            },
+            "2026-04-09": {
+                title: "CP(PMO)",
+                type: "common"
+            },
+            "2026-04-18": {
+                title: "AKADEMİ",
+                type: "common"
+            },
+            "2026-05-13": {
+                title: "PMO Day(PMO)",
+                type: "common"
+            },
+            "2026-05-16": {
+                title: "ANADOLU",
+                type: "common"
+            },
+            "2026-06-06": {
+                title: "CP(PMO)",
+                type: "common"
+            },
+            "2026-06-27": {
+                title: "ANADOLU",
+                type: "common"
+            },
+            "2026-08-20": {
+                title: "KURUMSAL",
+                type: "common"
+            },
+            "2026-10-31": {
+                title: "ANADOLU",
+                type: "common"
+            },
+        };
+
+        // Etkinlikler (kolay revize edilebilir)
+        const events = {
+
+            "2026-11-05": [
+                { team: "ANKARA", class: "team-ank", title: "Uluslararası Proje Yönetim Günü (IPM Day)", date: "05.11.2026", time: "--:--", responsible: "Ankara Etkinlikler", location: "Ankara", mode: "physical" },
+                {
+                    team: "İSTANBUL", class: "team-ist", title: "Uluslararası Proje Yönetim Günü (IPM Day)", date: "05.11.2026", time: "--:--", responsible: "İstanbul Etkinlikler", location: "İstanbul", mode: "physical"
+                },
+                { team: "İZMİR", class: "team-izmir", title: "Uluslararası Proje Yönetim Günü (IPM Day)", date: "05.11.2026", time: "--:--", responsible: "İzmir Etkinlikler", location: "İzmir", mode: "physical" }
+            ],
+
+            "2026-01-21": [
+                { team: "AKADEMİ", class: "team-akademi", title: "PMI-TR Akademi : 'PMI Kültür Değerleri - Etik ve Mesleki Davranış Kuralları' Eğitimi", date: "21.01.2026", time: "20:00-21:30", responsible: "Akademi", location: "Google Meet", mode: "online" }
+            ],
+
+            "2026-02-17": [
+                { team: "AKADEMİ", class: "team-akademi", title: "PMI-TR Akademi : 'Design Thinking: Değer Odaklı Projeler' Eğitimi", date: "17.02.2026", time: "19:00-22:00", responsible: "Akademi", location: "Zoom", mode: "online", pdu: "-", link: "-", sosyal_medya: "https://www.linkedin.com/posts/pmi-tr_pmit%C3%BCrkiye-pmiakademi-projey%C3%B6netimi-activity-7427973825415254016-ZDYS?originalSubdomain=tr" }
+            ],
+            /*
+            "2026-03-28": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Mentorluk Buluşması", date: "28.03.2026", time: "13:00", responsible: "Akademi Ekibi", location: "İstanbul", mode: "online" }
+            ],
+            */
+            /*
+             "2026-04-18": [
+                 { team: "AKADEMİ", class: "team-akademi", title: "Akademi Sertifika Programı", date: "18.04.2026", time: "09:30", responsible: "Akademi Ekibi", location: "Ankara", mode: "online" }
+             ],
+             */
+            "2026-05-06": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Kariyer Zirvesi", date: "06.05.2026", time: "15:00", responsible: "Akademi Ekibi", location: "İzmir", mode: "online" }
+            ],
+
+            "2026-06-18": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Yaz Programı Açılışı", date: "18.06.2026", time: "10:30", responsible: "Akademi Ekibi", location: "Antalya", mode: "online" }
+            ],
+
+            "2026-07-08": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Liderlik Eğitimi", date: "08.07.2026", time: "14:00", responsible: "Akademi Ekibi", location: "Online", mode: "online" }
+            ],
+
+            "2026-08-19": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Strateji Toplantısı", date: "19.08.2026", time: "16:00", responsible: "Akademi Ekibi", location: "Genel Merkez", mode: "online" }
+            ],
+
+            "2026-09-10": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Yeni Dönem Tanıtımı", date: "10.09.2026", time: "12:00", responsible: "Akademi Ekibi", location: "Online", mode: "online" }
+            ],
+
+            "2026-10-14": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Eğitim Kampı", date: "14.10.2026", time: "10:00", responsible: "Akademi Ekibi", location: "Bursa", mode: "online" }
+            ],
+
+            "2026-11-18": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Değerlendirme Toplantısı", date: "18.11.2026", time: "11:30", responsible: "Akademi Ekibi", location: "Ankara", mode: "online" }
+            ],
+
+            "2026-12-16": [
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Yıl Sonu Kapanış", date: "16.12.2026", time: "17:00", responsible: "Akademi Ekibi", location: "İstanbul", mode: "online" }
+            ],
+
+            // TEAM ANKARA
+            "2026-03-03": [
+                { team: "ANKARA", class: "team-ank", title: "PMI TR/KADINLAR GÜNÜ ÖZEL ETKİNLİĞİ", date: "03.03.2026", time: "20:30", responsible: "Ankara Etkinlikler, PMO", location: "Zoom", mode: "online", pdu: "1.0", link: "https://www.eventbrite.sg/e/pmi-tr-pga-farkl-sektorler-ortak-deneyimler-lider-kadnlar-anlatyor-tickets-1983710384159?aff=oddtdtcreator", sosyal_medya: "" }
+            ],
+
+            "2026-04-18": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Eğitim Günü", date: "18.04.2026", time: "14:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" },
+                { team: "AKADEMİ", class: "team-akademi", title: "Akademi Mentorluk Buluşması", date: "18.04.2026", time: "13:00", responsible: "Akademi Ekibi", location: "İstanbul", mode: "physical" }
+
+            ],
+            "2026-05-13": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Çalıştay", date: "13.05.2026", time: "11:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "online" }
+            ],
+            "2026-05-16": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Üye Buluşması", date: "16.05.2026", time: "16:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" }
+            ],
+            "2026-06-13": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Yaz Toplantısı", date: "13.06.2026", time: "10:30", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" }
+            ],
+            "2026-08-27": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Strateji Toplantısı", date: "27.08.2026", time: "15:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" }
+            ],
+            "2026-11-14": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Yıl Sonu Değerlendirme", date: "05.12.2026", time: "17:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" }
+            ],
+            "2026-12-05": [
+                { team: "ANKARA", class: "team-ank", title: "Ankara Yıl Sonu Değerlendirme", date: "05.12.2026", time: "17:00", responsible: "Ankara Ekibi", location: "Ankara", mode: "physical" }
+            ],
+
+            // TEAM İSTANBULs
+            "2026-02-13": [
+                { team: "İSTANBUL", class: "team-ist", title: "Dijitalleştik mi? Kurumsal Deneyimler Serisi - Bölüm 2", date: "13.02.2026", time: "15:00-17:00", responsible: "İstanbul Etkinlikler , Kurumsal Üyelik", location: "Teknopark İstanbul Genel Müdürlük - İstanbul", mode: "physical", pdu: "2.0", link: "https://www.eventbrite.sg/e/dijitallestik-mi-kurumsal-deneyimler-serisi-bolum-2-tickets-1982285773109?utm-campaign=social&utm-content=attendeeshare&utm-medium=discovery&utm-term=listing&utm-source=cp&aff=ebdsshcopyurl", sosyal_medya: "https://www.linkedin.com/posts/pmi-tr_pmiturkiyechapter-dijitald%C3%B6n%C3%BC%C5%9F%C3%BCm-kurumsaletkinlik-activity-7429481504566657024-7niK?originalSubdomain=tr" }
+            ],
+            "2026-03-28": [
+                { team: "İSTANBUL", class: "team-ist", title: "PMI-TR Akademi Eğitimi", date: "28.03.2026", time: "--:--", responsible: "İstanbul Etkinlikler, Akademi", location: "İstanbul", mode: "physical" },
+                { team: "AKADEMİ", class: "team-akademi", title: "PMI-TR Akademi Eğitimi", date: "28.03.2026", time: "--:--", responsible: "İstanbul Etkinlikler, Akademi", location: "İstanbul", mode: "physical" }
+            ],
+            "2026-04-09": [
+                { team: "İSTANBUL", class: "team-ist", title: "CP Online Etkinlik", date: "09.04.2026", time: "--:--", responsible: "İstanbul Etkinlikler, PMO", location: "İstanbul", mode: "online" }
+            ],
+            "2026-04-30": [
+                { team: "İSTANBUL", class: "team-ist", title: "İstanbul Profesyonel Gelişim Aktivitesi (Fiziksel)", date: "30.04.2026", time: "--:--", responsible: "İstanbul Etkinlikler", location: "İstanbul", mode: "physical" }
+            ],
+            "2026-06-06": [
+                { team: "İSTANBUL", class: "team-ist", title: "CP Fiziksel Etkinlik", date: "06.06.2026", time: "--:--", responsible: "İstanbul Etkinlikler, PMO", location: "İstanbul", mode: "physical" }
+            ],
+            "2026-06-27": [
+                { team: "İSTANBUL", class: "team-ist", title: "Anadolu PGA (Gaziantep)", date: "27.06.2026", time: "--:--", responsible: "İstanbul Etkinlikler", location: "Gaziantep", mode: "physical" }
+            ],
+            "2026-07-30": [
+                { team: "İSTANBUL", class: "team-ist", title: "İstanbul Profesyonel Gelişim Aktivitesi (Fiziksel)", date: "30.07.2026", time: "--:--", responsible: "İstanbul Etkinlikler", location: "İstanbul", mode: "physical" }
+            ],
+            "2026-09-03": [
+                { team: "İSTANBUL", class: "team-ist", title: "İstanbul Profesyonel Gelişim Aktivitesi (Online)", date: "03.09.2026", time: "--:--", responsible: "İstanbul Etkinlikler", location: "İstanbul", mode: "online" }
+            ],
+            "2026-11-28": [
+                { team: "İSTANBUL", class: "team-ist", title: "Üyelik Günü Etkinliği (İstanbul)", date: "18.11.2026", time: "--:--", responsible: "Üyelik Direktörlüğü", location: "İstanbul", mode: "physical" }
+            ],
+
+            // TEAM İZMİR
+            "2026-02-28": [
+                { team: "İZMİR", class: "team-izmir", title: "Sanayide Dijitalleşme Projeleri Neden Başarısız Olur?", date: "28.02.2026", time: "10:00-11:30", responsible: "İzmir Etkinlikler", location: "EGİAD Merkez Ofis, Alsancak - İzmir", mode: "physical", pdu: "1.5", link: "https://www.eventbrite.sg/e/sanayide-dijitallesme-projeleri-neden-basarsz-olur-tickets-1983383654903?aff=oddtdtcreator", sosyal_medya: "https://www.linkedin.com/posts/pmi-tr_pmi-t%C3%BCrkiye-i%CC%87zmir-pga-sanayide-dijitalle%C5%9Fme-activity-7429841193838125056-Tm_L?originalSubdomain=tr" }
+            ],
+            "2026-05-09": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Bahar Toplantısı", date: "09.05.2026", time: "14:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "physical" }
+            ],
+            "2026-06-30": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Yaz Organizasyonu", date: "30.06.2026", time: "18:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "online" }
+            ],
+            "2026-08-08": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Yaz Atölyesi", date: "08.08.2026", time: "13:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "physical" }
+            ],
+            "2026-08-20": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Strateji Toplantısı", date: "20.08.2026", time: "15:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "online" }
+            ],
+            "2026-10-31": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Yıl Sonu Hazırlık", date: "31.10.2026", time: "16:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "physical" }
+            ],
+            "2026-11-21": [
+                { team: "İZMİR", class: "team-izmir", title: "İzmir Yıl Sonu Hazırlık", date: "31.10.2026", time: "16:00", responsible: "İzmir Ekibi", location: "İzmir", mode: "physical" }
+            ]
+        };
+
+        generateEducation("CAPM", "team-capm", [
+
+
+            "2026-04-14", "2026-04-15",
+            "2026-04-21", "2026-04-22",
+            "2026-04-28", "2026-04-29",
+            "2026-05-05", "2026-05-06",
+            "2026-05-12", "2026-05-13",
+
+            "2026-07-07", "2026-07-08",
+            "2026-07-14", "2026-07-15",
+            "2026-07-21", "2026-07-22",
+            "2026-07-28", "2026-07-29",
+
+            "2026-08-04", "2026-08-05",
+
+            "2026-10-27", "2026-10-28",
+
+            "2026-11-03", "2026-11-04",
+            "2026-11-10", "2026-11-11",
+            "2026-11-17", "2026-11-18",
+            "2026-11-24", "2026-11-25"
+        ]);
+
+        generateFacilitation("PMP", "team-pmp", [
+            "2026-03-29", "2026-03-30",
+
+            "2026-04-05", "2026-04-06",
+            "2026-04-12", "2026-04-13",
+            "2026-04-19", "2026-04-20",
+            "2026-04-26", "2026-04-27",
+
+            "2026-05-03", "2026-05-04",
+
+            "2026-08-30", "2026-08-31",
+
+            "2026-09-06", "2026-09-07",
+            "2026-09-13", "2026-09-14",
+            "2026-09-20", "2026-09-21",
+            "2026-09-27", "2026-09-28",
+
+            "2026-10-04", "2026-10-05"
+        ]);
+
+        generateFacilitation("ACP", "team-acp", [
+            "2026-09-08", "2026-09-09",
+            "2026-09-15", "2026-09-16",
+            "2026-09-22", "2026-09-23",
+            "2026-09-29", "2026-09-30"
+        ]);
+
+        // Tatiller
+        const holidays = {
+            "2026-01-01": { type: "official", name: "Yılbaşı" },
+            "2026-04-23": { type: "official", name: "23 Nisan" },
+            "2026-05-19": { type: "official", name: "19 Mayıs" },
+            "2026-07-15": { type: "official", name: "15 Temmuz" },
+            "2026-08-30": { type: "official", name: "30 Ağustos" },
+            "2026-05-01": { type: "official", name: "1 Mayıs" },
+            "2026-10-29": { type: "official", name: "29 Ekim" },
+            "2026-03-19": { type: "bayram", name: "Ramazan B." },
+            "2026-03-20": { type: "bayram", name: "Ramazan B." },
+            "2026-03-21": { type: "bayram", name: "Ramazan B." },
+            "2026-05-26": { type: "bayram", name: "Kurban B." },
+            "2026-05-27": { type: "bayram", name: "Kurban B." },
+            "2026-05-28": { type: "bayram", name: "Kurban B." },
+            "2026-05-29": { type: "bayram", name: "Kurban B." },
+            "2026-05-30": { type: "bayram", name: "Kurban B." },
+        };
+
+        let activeFilters = new Set();
+
+
+        // HER AYIN SON ÇARŞAMBASINA ÜYELİK ETKİNLİĞİ EKLE
+        function addLastWednesdayEvents() {
+
+            for (let m = 0; m < 12; m++) {
+
+                const lastDay = new Date(year, m + 1, 0); // ayın son günü
+                let lastDate = lastDay.getDate();
+
+                // geriye doğru giderek Çarşamba bul
+                for (let d = lastDate; d > 0; d--) {
+                    const checkDate = new Date(year, m, d);
+                    if (checkDate.getDay() === 3) { // Çarşamba = 3
+
+                        const key = `${year}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+
+                        if (!events[key]) events[key] = [];
+
+                        events[key].push({
+                            team: "ÜYE",
+                            class: "team-uyelik",
+                            title: "PMI-TR Üyeleri Aylık Bilgilendirme Toplantısı",
+                            date: `${String(d).padStart(2, '0')}.${String(m + 1).padStart(2, '0')}.${year}`,
+                            time: "21:00-22:00",
+                            responsible: "Üyelik VP",
+                            location: "Zoom",
+                            mode: "online"
+                        });
+
+                        break; // o ay için bulundu
+                    }
+                }
+            }
+        }
+
+        // Takvim oluşturma
+        function createCalendar() {
+            const container = document.getElementById("calendar");
+
+            for (let q = 0; q < 4; q++) {
+                const quarterDiv = document.createElement("div");
+                quarterDiv.className = "quarter";
+
+                const qt = document.createElement("div");
+                qt.className = "quarter-title";
+                qt.innerText = "Q" + (q + 1);
+                quarterDiv.appendChild(qt);
+
+                const qm = document.createElement("div");
+                qm.className = "quarter-months";
+
+                for (let m = q * 3; m < q * 3 + 3; m++) {
+                    const monthDiv = document.createElement("div");
+                    monthDiv.className = "month";
+
+                    const mt = document.createElement("div");
+                    mt.className = "month-title";
+                    mt.innerText = months[m];
+                    monthDiv.appendChild(mt);
+
+                    const wdDiv = document.createElement("div");
+                    wdDiv.className = "weekdays";
+                    weekdays.forEach(d => {
+                        const el = document.createElement("div");
+                        el.innerText = d;
+                        wdDiv.appendChild(el);
+                    });
+                    monthDiv.appendChild(wdDiv);
+
+                    const daysDiv = document.createElement("div");
+                    daysDiv.className = "days";
+
+                    let firstDay = new Date(year, m, 1).getDay();
+                    firstDay = (firstDay === 0) ? 6 : firstDay - 1;
+                    const daysInMonth = new Date(year, m + 1, 0).getDate();
+
+                    for (let i = 0; i < firstDay; i++) {
+                        const empty = document.createElement("div");
+                        empty.className = "day empty";
+                        daysDiv.appendChild(empty);
+                    }
+
+                    for (let d = 1; d <= daysInMonth; d++) {
+                        const dayDiv = document.createElement("div");
+                        dayDiv.className = "day";
+
+
+                        const dayOfWeek = (firstDay + d - 1) % 7;
+                        if (dayOfWeek >= 5) dayDiv.classList.add("weekend");
+
+                        const number = document.createElement("div");
+                        number.className = "day-number";
+                        number.innerText = d;
+                        dayDiv.appendChild(number);
+
+                        const key = `${year}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+                        // TAM GÜN ÖZEL ETKİNLİK
+                        if (specialDays[key] && specialDays[key].type === "full") {
+
+                            dayDiv.classList.add("full-day-event");
+
+                            if (specialDays[key].theme) {
+                                dayDiv.classList.add(specialDays[key].theme);
+                            }
+
+                            const titleDiv = document.createElement("div");
+                            titleDiv.className = "full-day-title";
+                            titleDiv.innerText = specialDays[key].title;
+
+                            dayDiv.appendChild(titleDiv);
+                            daysDiv.appendChild(dayDiv);
+                            continue;
+                        }
+
+
+                        // ÖZEL GÜN (IPM vs)
+                        if (specialDays[key]) {
+
+                            dayDiv.classList.add("ipm-highlight");
+
+                            const titleDiv = document.createElement("div");
+                            titleDiv.className = "special-day-title";
+                            titleDiv.innerText = specialDays[key].title;
+
+                            dayDiv.appendChild(titleDiv);
+                        }
+
+                        // Tatil
+                        if (holidays[key]) {
+                            const h = document.createElement("div");
+                            h.className = holidays[key].type === "official" ? "holiday-official" : "holiday-bayram";
+                            h.innerText = holidays[key].name;
+                            dayDiv.appendChild(h);
+                        }
+
+                        // Etkinlikler
+                        if (events[key]) {
+                            events[key].forEach(ev => {
+                                const evDiv = document.createElement("div");
+
+                                if (ev.type === "education") {
+                                    evDiv.className = "event education " + ev.class;
+                                } else {
+                                    evDiv.className = "event " + ev.class;
+                                }
+
+                                evDiv.innerText = ev.mode === "online"
+                                    ? ev.team + " 🌐"
+                                    : ev.team + " 📍";
+
+                                // Popup
+                                const popup = document.createElement("div");
+                                popup.className = "popup";
+                                popup.innerHTML = `
+                                    <div><strong>Etkinlik:</strong> ${ev.title}</div>
+                                    <div><strong>Tarih:</strong> ${ev.date}</div>
+                                    <div><strong>Saat:</strong> ${ev.time}</div>
+                                    <div><strong>Sorumlu:</strong> ${ev.responsible}</div>
+                                    <div><strong>Mekan:</strong> ${ev.location}</div>
+                                `;
+                                evDiv.appendChild(popup);
+
+                                // Modal
+                                evDiv.addEventListener("click", function (e) {
+                                    e.stopPropagation();
+                                    openModal(ev);
+                                });
+
+                                dayDiv.appendChild(evDiv);
+                            });
+                        }
+
+                        daysDiv.appendChild(dayDiv);
+                    }
+
+                    monthDiv.appendChild(daysDiv);
+                    qm.appendChild(monthDiv);
+                }
+
+                quarterDiv.appendChild(qm);
+                container.appendChild(quarterDiv);
+            }
+        }
+
+        // Modal aç/kapa
+        function openModal(ev) {
+            document.getElementById("modalBody").innerHTML = `
+                <h2>${ev.title}</h2>
+                <p><strong>Tarih:</strong> ${ev.date}</p>
+                <p><strong>Saat:</strong> ${ev.time}</p>
+                <p><strong>Mekan:</strong> ${ev.location}</p>
+                <p><strong>Sorumlu:</strong> ${ev.responsible}</p>
+            `;
+            document.getElementById("eventModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("eventModal").style.display = "none";
+        }
+
+        window.onclick = function (e) {
+            const modal = document.getElementById("eventModal");
+            if (e.target == modal) closeModal();
+        }
+
+        // Takvimi başlat
+        addLastWednesdayEvents();
+        createCalendar();
+        updateStats();
+
+        
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+
+                const teamClass = this.dataset.team;
+
+                if (activeFilters.has(teamClass)) {
+                    activeFilters.delete(teamClass);
+                    this.classList.remove("active");
+                } else {
+                    activeFilters.add(teamClass);
+                    this.classList.add("active");
+                }
+
+                applyFilters();
+            });
+        });
+
+
+
+        document.querySelector(".reset-btn").addEventListener("click", function () {
+            activeFilters.clear();
+            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+            applyFilters();
+        });
+
+        function applyFilters() {
+
+            const allEvents = document.querySelectorAll(".event");
+            const allDays = document.querySelectorAll(".day");
+
+            if (activeFilters.size === 0) {
+
+                allEvents.forEach(ev => {
+                    ev.classList.remove("dimmed", "highlighted");
+                });
+
+                allDays.forEach(day => {
+                    day.classList.remove("dimmed");
+                });
+
+                updateStats();
+                return;
+            }
+
+            // Önce tüm günleri soluk yap
+            allDays.forEach(day => {
+                day.classList.add("dimmed");
+            });
+
+            // Tüm eventleri resetle
+            allEvents.forEach(ev => {
+                ev.classList.remove("highlighted");
+                ev.classList.add("dimmed");
+            });
+
+            // Seçilen illeri aktif yap
+            activeFilters.forEach(team => {
+
+                document.querySelectorAll("." + team).forEach(ev => {
+
+                    ev.classList.remove("dimmed");
+                    ev.classList.add("highlighted");
+
+                    const parentDay = ev.closest(".day");
+                    if (parentDay) {
+                        parentDay.classList.remove("dimmed");
+                    }
+
+                });
+            });
+
+            updateStats();
+        }
+
+        function updateStats() {
+
+            const statsPanel = document.getElementById("statsPanel");
+            statsPanel.innerHTML = "";
+
+            const allEvents = document.querySelectorAll(".event");
+
+            let filteredEvents = [];
+
+            if (activeFilters.size === 0) {
+                filteredEvents = Array.from(allEvents)
+                    .filter(ev => !ev.classList.contains("education"));
+            } else {
+
+                allEvents.forEach(ev => {
+
+                    if (ev.classList.contains("education")) return; // 👈 eğitimleri atla
+
+                    activeFilters.forEach(team => {
+                        if (ev.classList.contains(team)) {
+                            filteredEvents.push(ev);
+                        }
+                    });
+
+                });
+            }
+
+            const total = filteredEvents.length;
+
+            let onlineCount = 0;
+            let physicalCount = 0;
+
+            filteredEvents.forEach(ev => {
+
+                if (ev.innerText.includes("🌐")) {
+                    onlineCount++;
+                } else if (ev.innerText.includes("📍")) {
+                    physicalCount++;
+                }
+
+            });
+
+            // TOPLAM
+            const totalBox = document.createElement("div");
+            totalBox.className = "stat-box";
+            totalBox.innerHTML = `Toplam: <span>${total}</span>`;
+            statsPanel.appendChild(totalBox);
+
+            // ONLINE
+            const onlineBox = document.createElement("div");
+            onlineBox.className = "stat-box";
+            onlineBox.style.background = "#2980b9";
+            onlineBox.innerHTML = `Online 🌐: <span>${onlineCount}</span>`;
+            statsPanel.appendChild(onlineBox);
+
+            // FİZİKSEL
+            const physicalBox = document.createElement("div");
+            physicalBox.className = "stat-box";
+            physicalBox.style.background = "#27ae60";
+            physicalBox.innerHTML = `Fiziksel 📍: <span>${physicalCount}</span>`;
+            statsPanel.appendChild(physicalBox);
+
+            // ALT NOT
+            const note = document.createElement("div");
+            note.className = "stats-note";
+            note.innerText = "CAPM, PMP ve ACP sayılara dahil değildir.";
+            statsPanel.appendChild(note);
+        }
+
+    </script>
+
+</body>
+</html>
