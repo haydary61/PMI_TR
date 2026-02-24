@@ -901,7 +901,6 @@
         ]);
 
 
-        let activeFilters = new Set();
 		
 		let filters = {
 			team: new Set(),
@@ -1219,10 +1218,18 @@ popup.addEventListener("mouseleave", function () {
 
 
         document.querySelector(".reset-btn").addEventListener("click", function () {
-            activeFilters.clear();
-            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-            applyFilters();
-        });
+
+			// 🔥 Gerçek filtreleri temizle
+			filters.team.clear();
+			filters.mode.clear();
+
+			// Buton active görünümlerini kaldır
+			document.querySelectorAll(".filter-btn").forEach(b => {
+				b.classList.remove("active");
+			});
+
+			applyFilters();
+		});
 
 		
 		function applyFilters() {
